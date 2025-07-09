@@ -1,0 +1,13 @@
+/* Custom styles can go here */
+.gallery-item {
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+}
+
+.instagram-post {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
