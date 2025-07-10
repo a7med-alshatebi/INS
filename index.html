@@ -3,32 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Gallery</title>
+    <title>Insta-GRAM (the good kind)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+<body class="bg-gray-900 min-h-screen overflow-x-hidden">
+    <!-- Random floating emoji -->
+    <div id="floating-emoji" class="fixed text-4xl" style="top: 20%; right: 5%">🤳</div>
+    
+    <div class="container mx-auto px-4 py-8 relative">
+        <!-- Secret "easter egg" area -->
+        <div class="easter-egg absolute top-0 left-0 w-4 h-4 opacity-0">🥚</div>
+        
         <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-pink-600 mb-2">Instagram Gallery</h1>
-            <p class="text-gray-600">Latest posts from my Instagram</p>
+            <h1 class="text-4xl font-bold text-pink-600 mb-2 hover:rotate-6 transition-transform">
+                Insta-GRAM <span class="text-sm">(the good kind)</span>
+            </h1>
+            <p class="text-gray-200">Latest posts from my Instagram 
+                <span id="loading-text" class="inline-block">...</span>
+            </p>
+            <p class="text-xs text-gray-500 mt-1">(Now with 100% more pixels than MySpace!)</p>
         </header>
 
+        <!-- Fake "like" counter -->
+        <div class="text-center mb-6">
+            <button id="fake-like-btn" class="px-4 py-2 bg-pink-600 rounded-full text-white hover:bg-pink-700 transition">
+                ❤️ Smash that Like button! <span id="like-counter">0</span> likes
+            </button>
+            <p class="text-xs text-gray-400 mt-1">(Warning: Likes may or may not be imaginary)</p>
+        </div>
+
         <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <!-- Posts will be loaded here -->
+            <!-- Loading skeleton with funny messages -->
             <div class="text-center py-8">
                 <div class="animate-pulse">
-                    <div class="h-64 bg-gray-200 rounded-lg mb-4"></div>
+                    <div class="h-64 bg-gray-200 rounded-lg mb-4 relative">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="spinner">🔄</div>
+                        </div>
+                    </div>
                     <div class="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                    <p class="text-xs text-gray-400 mt-2">Loading your future viral post...</p>
                 </div>
             </div>
         </div>
 
         <div id="error" class="hidden text-center py-12">
-            <p class="text-red-500 text-lg">Failed to load Instagram posts. Please try again later.</p>
+            <p class="text-red-500 text-lg">Failed to load Instagram posts. 
+                <span class="text-sm">(Probably because you didn't sacrifice enough goats to the algorithm gods)</span>
+            </p>
+            <button id="try-again" class="mt-4 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700">
+                Try Again (It might work this time)
+            </button>
+        </div>
+
+        <!-- Fake follower counter -->
+        <div class="text-center mt-12 text-gray-400">
+            <p>👁️ <span id="follower-count">1</span> people are pretending to watch this</p>
+            <p class="text-xs">(Mostly your mom)</p>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Fun interactive elements
+        document.addEventListener('DOMContentLoaded', () => {
+            // Floating emoji follows mouse
+            document.addEventListener('mousemove', (e) => {
+                const emoji = document.getElementById('floating-emoji');
+                emoji.style.left = (e.clientX + 20) + 'px';
+                emoji.style.top = (e.clientY + 20) + 'px';
+            });
+
+            // Fake like button
+            const likeBtn = document.getElementById('fake-like-btn');
+            const likeCounter = document.getElementById('like-counter');
+            likeBtn.addEventListener('click', () => {
+                const currentLikes = parseInt(likeCounter.textContent);
+                likeCounter.textContent = currentLikes + 1;
+                
+                // Create confetti
+                for (let i = 0; i < 20; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    document.body.appendChild(confetti);
+                    
+                    // Animate confetti
+                    setTimeout(() => {
+                        confetti.style.top = '100vh';
+                        confetti.style.opacity = '0';
+                        confetti.style.transition = 'all 2s linear';
+                    }, 10);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 2100);
+                }
+            });
+
+            // Easter egg
+            const easterEgg = document.querySelector('.easter-egg');
+            easterEgg.addEventListener('click', () => {
+                alert('🎉 You found the secret egg! Your prize: Nothing!');
+            });
+
+            // Fake loading text animation
+            const loadingText = document.getElementById('loading-text');
+            const dots = ['.', '..', '...'];
+            let dotIndex = 0;
+            setInterval(() => {
+                loadingText.textContent = dots[dotIndex % dots.length];
+                dotIndex++;
+            }, 500);
+
+            // Fake follower count
+            setInterval(() => {
+                const count = document.getElementById('follower-count');
+                const current = parseInt(count.textContent);
+                count.textContent = current + (Math.random() > 0.7 ? 1 : 0);
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
