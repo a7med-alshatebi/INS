@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('https://www.a7med-alshatebi.tech//api/instagram');
+        const response = await fetch('https://ins-ten.vercel.app/api/instagram');
         
         if (!response.ok) {
             throw new Error('Network response was not ok');
